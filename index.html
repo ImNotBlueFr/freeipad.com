@@ -56,8 +56,9 @@
     <!-- Sound Activation Overlay -->
     <div id="sound-overlay">
         <div class="content p-8 rounded-xl">
-            <h1 class="text-3xl sm:text-4xl font-extrabold mb-4">Click to Start Video with Sound</h1>
-            <p class="text-lg sm:text-xl">A user interaction is required to enable audio in modern browsers.</p>
+            <!-- UPDATED: Changed text to "Click for free ipad" -->
+            <h1 class="text-3xl sm:text-4xl font-extrabold mb-4">Click for free ipad</h1>
+            <p class="text-lg sm:text-xl">Click anywhere to continue.</p>
         </div>
     </div>
 
@@ -65,6 +66,7 @@
     <div class="video-container">
         <!-- 
             The 'muted' attribute has been removed to allow sound.
+            The 'poster' attribute for the loading video has been removed.
             The 'id' attribute has been added to target the video with JavaScript.
         -->
         <video 
@@ -73,7 +75,7 @@
             autoplay 
             loop 
             playsinline 
-            poster="https://placehold.co/1920x1080/000000/FFFFFF?text=Loading+Video"
+            <!-- The 'poster' attribute was removed here. -->
         >
             <!-- 
                 !!! IMPORTANT !!!
@@ -131,4 +133,3 @@
 
 </body>
 </html>
-
