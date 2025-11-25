@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Congratulations, you just won a free iPad! Go to freeipad.com to claim your prize!</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/tone@14.9.11/build/Tone.js"></script>
     <style>
         .video-container {
             position: fixed;
@@ -26,11 +27,20 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
         }
+        .bouncing-element {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            will-change: transform;
+        }
     </style>
 </head>
 <body class="font-sans min-h-screen">
 
-    <div id="click-prompt" class="fixed top-4 left-4 text-white text-2xl font-bold tracking-widest p-3 bg-red-600 rounded-lg shadow-xl cursor-pointer transition-opacity duration-700 ease-in-out z-0">
+    <div id="click-prompt" class="fixed top-4 left-4 text-white text-2xl font-bold tracking-widest p-3 bg-red-600 rounded-lg shadow-xl cursor-pointer transition-opacity duration-700 ease-in-out z-10">
         CLICK
     </div>
 
@@ -51,11 +61,55 @@
     <script>
         const video = document.getElementById('background-video');
         const clickPrompt = document.getElementById('click-prompt');
+        const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
-        const enableAudio = () => {
+        const spawnBouncingElement = () => {
+            const size = 40;
+            const element = document.createElement('div');
+            
+            element.className = 'bouncing-element';
+            element.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
+
+            let x = Math.random() * (window.innerWidth - size);
+            let y = Math.random() * (window.innerHeight - size);
+            let vx = (Math.random() - 0.5) * 6;
+            let vy = (Math.random() - 0.5) * 6;
+            
+            const update = () => {
+                x += vx;
+                y += vy;
+                
+                let collided = false;
+                
+                if (x + size > window.innerWidth || x < 0) {
+                    vx = -vx;
+                    x = Math.max(0, Math.min(x, window.innerWidth - size));
+                    collided = true;
+                }
+                if (y + size > window.innerHeight || y < 0) {
+                    vy = -vy;
+                    y = Math.max(0, Math.min(y, window.innerHeight - size));
+                    collided = true;
+                }
+                
+                element.style.transform = `translate(${x}px, ${y}px)`;
+
+                if (collided) {
+                    const pitch = 200 + Math.abs(vx) * 80 + Math.abs(vy) * 80;
+                    synth.triggerAttackRelease(pitch, "16n");
+                }
+
+                requestAnimationFrame(update);
+            };
+            
+            document.body.appendChild(element);
+            update();
+        };
+
+        const firstClickSetup = () => {
             video.muted = false;
             video.play().catch(console.error);
-            
+
             if (clickPrompt) {
                 clickPrompt.style.opacity = 0;
                 setTimeout(() => { 
@@ -63,12 +117,17 @@
                 }, 700); 
             }
             
-            document.removeEventListener('click', enableAudio);
-            document.removeEventListener('touchstart', enableAudio);
+            document.removeEventListener('click', firstClickSetup);
+            document.removeEventListener('touchstart', firstClickSetup);
+            
+            document.addEventListener('click', spawnBouncingElement);
+            document.addEventListener('touchstart', spawnBouncingElement);
+            
+            spawnBouncingElement();
         };
 
-        document.addEventListener('click', enableAudio);
-        document.addEventListener('touchstart', enableAudio);
+        document.addEventListener('click', firstClickSetup);
+        document.addEventListener('touchstart', firstClickSetup);
     </script>
 
 </body>
