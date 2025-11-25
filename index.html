@@ -29,10 +29,11 @@
         }
         .bouncing-element {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            width: 100px; 
+            height: 56px; 
+            background-color: rgba(0, 0, 0, 0.8); 
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
             z-index: 5;
             will-change: transform;
         }
@@ -64,16 +65,16 @@
         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
         const spawnBouncingElement = () => {
-            const size = 40;
+            const width = 100;
+            const height = 56;
             const element = document.createElement('div');
             
             element.className = 'bouncing-element';
-            element.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
 
-            let x = Math.random() * (window.innerWidth - size);
-            let y = Math.random() * (window.innerHeight - size);
-            let vx = (Math.random() - 0.5) * 6;
-            let vy = (Math.random() - 0.5) * 6;
+            let x = Math.random() * (window.innerWidth - width);
+            let y = Math.random() * (window.innerHeight - height);
+            let vx = (Math.random() - 0.5) * 12; 
+            let vy = (Math.random() - 0.5) * 12;
             
             const update = () => {
                 x += vx;
@@ -81,23 +82,18 @@
                 
                 let collided = false;
                 
-                if (x + size > window.innerWidth || x < 0) {
+                if (x + width > window.innerWidth || x < 0) {
                     vx = -vx;
-                    x = Math.max(0, Math.min(x, window.innerWidth - size));
+                    x = Math.max(0, Math.min(x, window.innerWidth - width));
                     collided = true;
                 }
-                if (y + size > window.innerHeight || y < 0) {
+                if (y + height > window.innerHeight || y < 0) {
                     vy = -vy;
-                    y = Math.max(0, Math.min(y, window.innerHeight - size));
+                    y = Math.max(0, Math.min(y, window.innerHeight - height));
                     collided = true;
                 }
                 
                 element.style.transform = `translate(${x}px, ${y}px)`;
-
-                if (collided) {
-                    const pitch = 200 + Math.abs(vx) * 80 + Math.abs(vy) * 80;
-                    synth.triggerAttackRelease(pitch, "16n");
-                }
 
                 requestAnimationFrame(update);
             };
