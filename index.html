@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seamless Looping Video Background</title>
+    <!-- Load Tailwind CSS for simple, clean styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS to make the video fill the entire screen */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -10; /* Ensures the video is in the background */
+        }
+        .video-background {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover; /* Ensures the video covers the container */
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col items-center justify-center">
+
+    <!-- Video Background Container -->
+    <div class="video-container">
+        <!-- 
+            The video tag uses four crucial attributes for an autoplaying loop:
+            1. autoplay: Starts the video as soon as the page loads.
+            2. loop: Makes the video automatically restart when it finishes.
+            3. muted: Required by most modern browsers (like Chrome) for autoplay to work.
+            4. playsinline: Essential for autoplaying on iOS devices.
+        -->
+        <video 
+            class="video-background" 
+            autoplay 
+            loop 
+            muted 
+            playsinline 
+            poster="https://placehold.co/1920x1080/000000/FFFFFF?text=Loading+Video"
+        >
+            <!-- 
+                !!! IMPORTANT !!!
+                Replace 'your-video-file.mp4' with the actual path/name 
+                of your video file you upload to the GitHub repository.
+            -->
+            <source src="your-video-file.mp4" type="video/mp4">
+            
+            <!-- Fallback text for browsers that don't support the video tag -->
+            Your browser does not support the video tag. Please check the video source.
+        </video>
+    </div>
+
+    <!-- 
+        The original foreground content and error message have been removed 
+        to create a clean, full-screen video experience.
+    -->
+
+</body>
+</html>
