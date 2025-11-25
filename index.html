@@ -68,75 +68,69 @@
         const video = document.getElementById('background-video');
         const clickPrompt = document.getElementById('click-prompt');
 
-        const spawnBouncingElement = () => {
-            const width = 150;
-            const height = 84;
-            const element = document.createElement('div');
-            
-            element.className = 'bouncing-element';
+        let sR = 1;
+        let sI = null;
 
-            const clonedVideo = video.cloneNode(true);
-            clonedVideo.removeAttribute('id');
-            clonedVideo.className = 'cloned-video';
-            clonedVideo.muted = false; 
-            
-            clonedVideo.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
-
-            const minRate = 0.7;
-            const maxRate = 1.4;
-            const randomRate = Math.random() * (maxRate - minRate) + minRate;
-            
-            clonedVideo.playbackRate = randomRate;
-            clonedVideo.currentTime = video.currentTime;
-            clonedVideo.play().catch(console.error);
-            
-            element.appendChild(clonedVideo);
-
-            let x = Math.random() * (window.innerWidth - width);
-            let y = Math.random() * (window.innerHeight - height);
+        const spawn = () => {
+            const w = 150;
+            const h = 84;
+            const e = document.createElement('div');
+            e.className = 'bouncing-element';
+            const cV = video.cloneNode(true);
+            cV.removeAttribute('id');
+            cV.className = 'cloned-video';
+            cV.muted = false; 
+            cV.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+            const rR = Math.random() * (1.4 - 0.7) + 0.7;
+            cV.playbackRate = rR;
+            cV.currentTime = video.currentTime;
+            cV.play().catch(console.error);
+            e.appendChild(cV);
+            let x = Math.random() * (window.innerWidth - w);
+            let y = Math.random() * (window.innerHeight - h);
             let vx = (Math.random() - 0.5) * 12; 
             let vy = (Math.random() - 0.5) * 12;
-            
             const update = () => {
                 x += vx;
                 y += vy;
-                
-                if (x + width > window.innerWidth || x < 0) {
+                if (x + w > window.innerWidth || x < 0) {
                     vx = -vx;
-                    x = Math.max(0, Math.min(x, window.innerWidth - width));
+                    x = Math.max(0, Math.min(x, window.innerWidth - w));
                 }
-                if (y + height > window.innerHeight || y < 0) {
+                if (y + h > window.innerHeight || y < 0) {
                     vy = -vy;
-                    y = Math.max(0, Math.min(y, window.innerHeight - height));
+                    y = Math.max(0, Math.min(y, window.innerHeight - h));
                 }
-                
-                element.style.transform = `translate(${x}px, ${y}px)`;
-
+                e.style.transform = `translate(${x}px, ${y}px)`;
                 requestAnimationFrame(update);
             };
-            
-            document.body.appendChild(element);
+            document.body.appendChild(e);
             update();
+        };
+
+        const startSpawning = () => {
+            sI = setInterval(() => {
+                for (let i = 0; i < sR; i++) {
+                    spawn();
+                }
+                sR *= 2;
+                if (sR > 4096) clearInterval(sI);
+            }, 1000);
         };
 
         const firstClickSetup = () => {
             video.muted = false;
             video.play().catch(console.error);
-
             if (clickPrompt) {
                 clickPrompt.style.opacity = 0;
                 setTimeout(() => { 
                     clickPrompt.style.display = 'none'; 
                 }, 700); 
             }
-            
             document.removeEventListener('click', firstClickSetup);
             document.removeEventListener('touchstart', firstClickSetup);
-            
-            document.addEventListener('click', spawnBouncingElement);
-            document.addEventListener('touchstart', spawnBouncingElement);
-            
-            spawnBouncingElement();
+            spawn();
+            startSpawning();
         };
 
         document.addEventListener('click', firstClickSetup);
