@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Congratulations, you just won a free iPad! Go to freeipad.com to claim your prize!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/tone@14.9.11/build/Tone.js"></script>
     <style>
         .video-container {
             position: fixed;
@@ -31,7 +30,7 @@
             position: absolute;
             width: 150px; 
             height: 84px; 
-            border: 2px solid white;
+            border: 2px solid white; 
             box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
             z-index: 5;
             will-change: transform;
@@ -68,7 +67,6 @@
     <script>
         const video = document.getElementById('background-video');
         const clickPrompt = document.getElementById('click-prompt');
-        const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
         const spawnBouncingElement = () => {
             const width = 150;
@@ -76,21 +74,21 @@
             const element = document.createElement('div');
             
             element.className = 'bouncing-element';
-            
+
             const clonedVideo = video.cloneNode(true);
             clonedVideo.removeAttribute('id');
             clonedVideo.className = 'cloned-video';
             clonedVideo.muted = false; 
-
-            const minFreq = 200;
-            const maxFreq = 600;
-            const randomPitch = minFreq + Math.random() * (maxFreq - minFreq);
             
-            clonedVideo.playbackRate = 1.0; 
+            clonedVideo.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+
+            const minRate = 0.7;
+            const maxRate = 1.4;
+            const randomRate = Math.random() * (maxRate - minRate) + minRate;
+            
+            clonedVideo.playbackRate = randomRate;
             clonedVideo.currentTime = video.currentTime;
             clonedVideo.play().catch(console.error);
-
-            synth.triggerAttackRelease(randomPitch, '8n');
             
             element.appendChild(clonedVideo);
 
@@ -122,7 +120,6 @@
         };
 
         const firstClickSetup = () => {
-            Tone.start(); 
             video.muted = false;
             video.play().catch(console.error);
 
