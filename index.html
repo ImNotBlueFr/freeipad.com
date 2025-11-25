@@ -30,6 +30,10 @@
 </head>
 <body class="font-sans min-h-screen">
 
+    <div id="click-prompt" class="fixed top-4 left-4 text-white text-2xl font-bold tracking-widest p-3 bg-red-600 rounded-lg shadow-xl animate-pulse cursor-pointer transition-opacity duration-700 ease-in-out z-0">
+        CLICK
+    </div>
+
     <div class="video-container">
         <video 
             id="background-video"
@@ -46,13 +50,22 @@
 
     <script>
         const video = document.getElementById('background-video');
+        const clickPrompt = document.getElementById('click-prompt');
 
-        function enableAudio() {
+        const enableAudio = () => {
             video.muted = false;
             video.play().catch(console.error);
+            
+            if (clickPrompt) {
+                clickPrompt.style.opacity = 0;
+                setTimeout(() => { 
+                    clickPrompt.style.display = 'none'; 
+                }, 700); 
+            }
+            
             document.removeEventListener('click', enableAudio);
             document.removeEventListener('touchstart', enableAudio);
-        }
+        };
 
         document.addEventListener('click', enableAudio);
         document.addEventListener('touchstart', enableAudio);
