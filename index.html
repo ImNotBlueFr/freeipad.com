@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Congratulations, you just won a free iPad! Go to freeipad.com to claim your prise!</title>
+    <title>Congratulations, you just won a free iPad! Go to freeipad.com to claim your prize!</title>
     <!-- Load Tailwind CSS for simple, clean styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -35,16 +35,15 @@
     <!-- Video Background Container -->
     <div class="video-container">
         <!-- 
-            The video tag now uses the 'muted' attribute again. 
-            This ensures reliable cross-browser 'autoplay' and 'loop' functionality, 
-            as modern browsers typically block videos from autoplaying with sound.
+            The 'muted' attribute has been removed as requested. 
+            NOTE: This change means modern browsers will likely prevent the video 
+            from autoplaying or looping until the user manually interacts with the page.
         -->
         <video 
             id="background-video"
             class="video-background" 
             autoplay 
             loop 
-            muted 
             playsinline 
         >
             <!-- 
