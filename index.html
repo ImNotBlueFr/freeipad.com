@@ -81,7 +81,12 @@
             clonedVideo.removeAttribute('id');
             clonedVideo.className = 'cloned-video';
             clonedVideo.muted = false; 
+
+            const minRate = 0.7;
+            const maxRate = 1.4;
+            const randomRate = Math.random() * (maxRate - minRate) + minRate;
             
+            clonedVideo.playbackRate = randomRate;
             clonedVideo.currentTime = video.currentTime;
             clonedVideo.play().catch(console.error);
             
