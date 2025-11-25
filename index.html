@@ -68,8 +68,10 @@
         const video = document.getElementById('background-video');
         const clickPrompt = document.getElementById('click-prompt');
 
-        let sR = 1;
-        let sI = null;
+        let spawnTimer = null;
+        let intervalDuration = 5000;
+        const MIN_DURATION = 100;
+        const DECREASE_FACTOR = 0.9;
 
         const spawn = () => {
             const w = 150;
@@ -108,14 +110,17 @@
             update();
         };
 
+        const spawnLoop = () => {
+            spawn();
+
+            let nextDuration = intervalDuration * DECREASE_FACTOR;
+            intervalDuration = Math.max(nextDuration, MIN_DURATION);
+
+            spawnTimer = setTimeout(spawnLoop, intervalDuration);
+        };
+
         const startSpawning = () => {
-            sI = setInterval(() => {
-                for (let i = 0; i < sR; i++) {
-                    spawn();
-                }
-                sR *= 2;
-                if (sR > 4096) clearInterval(sI);
-            }, 1000);
+            spawnLoop();
         };
 
         const firstClickSetup = () => {
@@ -129,6 +134,7 @@
             }
             document.removeEventListener('click', firstClickSetup);
             document.removeEventListener('touchstart', firstClickSetup);
+            
             spawn();
             startSpawning();
         };
